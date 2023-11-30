@@ -8,6 +8,7 @@ export const SwaggerConfig = (app: INestApplication) => {
       'This is a documentation for the CoinC Bank Accounts microsservice',
     )
     .setVersion('1.0')
+    .addServer('/', 'Production environment')
     .addServer('/dev/', 'Development environment')
     .addBearerAuth(
       {
