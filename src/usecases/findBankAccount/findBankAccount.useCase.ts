@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IDataServices } from '../../core';
+import { IDataServices } from '../../core/abstracts/dataServices.abstract';
 import { FindBankAccountResponse } from './findBankAccount.dto';
 
 @Injectable()

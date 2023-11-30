@@ -1,4 +1,4 @@
-import { BankAccount } from '../entities';
+import { BankAccount } from '../entities/bankAccount.entity';
 import { IGenericRepository } from './genericRepository.abstract';
 
 export abstract class IDataServices {

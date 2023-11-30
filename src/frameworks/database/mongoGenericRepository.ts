@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { IGenericRepository } from '../../core';
+import { IGenericRepository } from '../../core/abstracts/genericRepository.abstract';
 
 export class MongoGenericRepository<T> implements IGenericRepository<T> {
   private _repository: Model<T>;
@@ -27,5 +27,11 @@ export class MongoGenericRepository<T> implements IGenericRepository<T> {
 
   delete(id: string): Promise<T | null> {
     return this._repository.findByIdAndDelete(id).exec() as Promise<T | null>;
+  }
+
+  getAll(id: string): Promise<T[]> {
+    return this._repository.find({
+      userId: id,
+    }).exec() as Promise<T[]>;
   }
 }

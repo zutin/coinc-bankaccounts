@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IDataServices } from '../../core';
+import { IDataServices } from '../../core/abstracts/dataServices.abstract';
 import {
   UpdateBankAccountRequest,
   UpdateBankAccountResponse,
@@ -14,7 +14,6 @@ export class UpdateBankAccountUseCase {
   ) {}
 
   async execute(
-    id: string,
     updateBankAccountRequest: UpdateBankAccountRequest,
   ): Promise<UpdateBankAccountResponse> {
     try {
@@ -22,14 +21,14 @@ export class UpdateBankAccountUseCase {
         updateBankAccountRequest,
       );
       const updatedBankAccount = await this.dataServices.bankAccount.update(
-        id,
+        updateBankAccountRequest.id,
         bankAccount,
       );
 
       if (updatedBankAccount) {
         const response: UpdateBankAccountResponse = {
           code: 200,
-          message: `Bank Account ${id} updated successfully`,
+          message: `Bank Account ${updateBankAccountRequest.id} updated successfully`,
         };
 
         return response;

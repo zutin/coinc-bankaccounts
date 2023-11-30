@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { IDataServices } from '../../core';
+import { IDataServices } from '../../core/abstracts/dataServices.abstract';
 import { DB_CONFIG } from '../../configuration';
-import { BankAccount, BankAccountSchema } from './model';
+import { BankAccount, BankAccountSchema } from './model/bankAccount.model';
 import { MongoDataServices } from './mongoDataServices.service';
 
 @Module({

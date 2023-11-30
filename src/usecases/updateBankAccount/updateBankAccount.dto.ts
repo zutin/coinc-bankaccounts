@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateBankAccountRequest {
+  @ApiProperty({ example: '1234567890' })
+  id: string;
+
   @ApiProperty({ example: 'Updated Bank Account', required: false })
   name?: string;
 

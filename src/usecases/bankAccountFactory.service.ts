@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { BankAccount } from '../core';
-import { CreateBankAccountRequest } from './createBankAccount';
-import { UpdateBankAccountRequest } from './updateBankAccount';
+import { BankAccount } from '../core/entities/bankAccount.entity';
+import { CreateBankAccountRequest } from './createBankAccount/createBankAccount.dto';
+import { UpdateBankAccountRequest } from './updateBankAccount/updateBankAccount.dto';
 
 @Injectable()
 export class BankAccountFactoryService {

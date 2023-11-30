@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { IDataServices } from '../../core';
-import { DeleteBankAccountResponse } from './deleteBankAccount.dto';
+import { IDataServices } from '../../core/abstracts/dataServices.abstract';
+import { DeleteBankAccountRequest, DeleteBankAccountResponse } from './deleteBankAccount.dto';
 
 @Injectable()
 export class DeleteBankAccountUseCase {
   constructor(private dataServices: IDataServices) {}
 
-  async execute(id: string): Promise<DeleteBankAccountResponse> {
+  async execute(deleteBankAccountRequest: DeleteBankAccountRequest): Promise<DeleteBankAccountResponse> {
     try {
-      const deletedBankAccount = await this.dataServices.bankAccount.delete(id);
+      const deletedBankAccount = await this.dataServices.bankAccount.delete(deleteBankAccountRequest.id);
 
       if (deletedBankAccount) {
         const response: DeleteBankAccountResponse = {

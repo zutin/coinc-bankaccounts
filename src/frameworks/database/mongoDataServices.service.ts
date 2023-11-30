@@ -1,9 +1,9 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IDataServices } from '../../core';
+import { IDataServices } from '../../core/abstracts/dataServices.abstract';
 import { MongoGenericRepository } from './mongoGenericRepository';
-import { BankAccount, BankAccountDocument } from './model';
+import { BankAccount, BankAccountDocument } from './model/bankAccount.model';
 
 @Injectable()
 export class MongoDataServices
