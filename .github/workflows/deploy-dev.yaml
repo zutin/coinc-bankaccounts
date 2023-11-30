@@ -1,0 +1,61 @@
+name: Deploy to AWS ECS - MS  BANK ACCOUNT
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/coinc-ms-bank-accounts:latest
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get install -y awscli
+
+      - name: Serverless install
+        run: |
+          npm i -g serverless
+
+      - name: Configure AWS credentials
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Docker image
+        run: |
+          docker build -t coinc-ms-bank-accounts -f docker/dockerfile .
+
+      - name: Create ECR repository
+        run: aws ecr create-repository --repository-name coinc-ms-bank-accounts --region ${{ secrets.AWS_REGION }}
+
+      - name: Authenticate Docker with ECR
+        run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+      - name: Tag and push Docker image to ECR
+        run: |
+          docker tag coinc-ms-bank-accounts:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/coinc-ms-bank-accounts:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/coinc-ms-bank-accounts:latest
+
+      - name: Serverless Deploy
+        run: |
+          serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile devProfile -o
+          sls deploy --param="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" --param="AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" --param="IMAGE=$IMAGE" --stage dev

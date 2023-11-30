@@ -1,0 +1,20 @@
+# Use a imagem base da AWS Lambda Node.js
+FROM public.ecr.aws/lambda/nodejs:18
+
+# Copie o arquivo package.json e package-lock.json (se existir)
+COPY ./package*.json ./
+
+# Instale as dependências da aplicação NestJS
+RUN npm install --silent
+
+# Copie o código-fonte do aplicativo
+COPY . .
+
+# Execute a compilação TypeScript para JavaScript
+RUN npm run build
+
+
+COPY . ${LAMBDA_TASK_ROOT}
+
+
+CMD [ "dist/lambda.handler" ]

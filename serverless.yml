@@ -1,0 +1,35 @@
+service: coinc-ms-bank-accounts
+
+package:
+  exclude:
+    - node_modules/**
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stackTags:
+    Projeto: 'COINC'
+  environment:
+    ACCESS_KEY_ID: ${self:custom.AWS_ACCESS_KEY_ID}
+    ACCESS_SECRET_KEY: ${self:custom.AWS_SECRET_ACCESS_KEY}
+  stage: ${opt:stage, self:custom.defaultStage}
+  profile: ${self:custom.profiles.${self:provider.stage}}
+
+custom:
+  IMAGE: ${param:IMAGE, 'IMAGE'}
+  AWS_ACCESS_KEY_ID: ${param:AWS_ACCESS_KEY_ID, 'AWS_ACCESS_KEY_ID'}
+  AWS_SECRET_ACCESS_KEY: ${param:AWS_SECRET_ACCESS_KEY, 'AWS_SECRET_ACCESS_KEY'}
+  defaultStage: dev
+  profiles:
+    dev: devProfile
+    prod: prodProfile
+
+functions:
+  lambda:
+    image: ${self:custom.IMAGE}
+    events:
+      - http:
+          method: ANY
+          path: '/{proxy+}'
+          cors: true
