@@ -21,11 +21,11 @@ export class MongoGenericRepository<T> implements IGenericRepository<T> {
     return this._repository.create(item);
   }
 
-  update(id: string, item: T) {
-    return this._repository.findByIdAndUpdate(id, item);
+  update(id: string, item: T): Promise<T | null> {
+    return this._repository.findByIdAndUpdate(id, item, { new: true }).exec();
   }
 
-  delete(id: string) {
-    return this._repository.findByIdAndDelete(id);
+  delete(id: string): Promise<T | null> {
+    return this._repository.findByIdAndDelete(id).exec();
   }
 }
